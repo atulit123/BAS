@@ -1,0 +1,1 @@
+This project is for implementing Book Shop Atuomation software
