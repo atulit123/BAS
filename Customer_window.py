@@ -1,8 +1,6 @@
 from PyQt4.QtGui import *
 from PyQt4.QtCore import Qt
-import pandas as pd
 import string
-import matplotlib.pyplot as plt
 import sys
 with open('stylesheet.txt','r') as f:
     sheet=f.read()
@@ -86,7 +84,7 @@ class qWindow(QWidget):
 
 
 
-   
+
 
 
 
