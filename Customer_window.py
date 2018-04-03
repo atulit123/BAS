@@ -1,6 +1,5 @@
 from PyQt4.QtGui import *
 from PyQt4.QtCore import Qt
-import pandas as pd
 import string
 import matplotlib.pyplot as plt
 from book_details import get_show_details_widget
@@ -125,7 +124,7 @@ class qWindow(QWidget):
 
 
 
-   
+
 
 
 
