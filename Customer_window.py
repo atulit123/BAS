@@ -3,6 +3,9 @@ from PyQt4.QtCore import Qt
 import string
 import matplotlib.pyplot as plt
 from book_details import get_show_details_widget
+from signup import signup
+from login_form import login_form
+
 from stylesheets import *
 import sys
 with open('stylesheet.txt','r') as f:
@@ -39,10 +42,10 @@ class qWindow(QWidget):
         self.button_search.clicked.connect(self.search_clicked)
         self.button_login=QPushButton("Login")
         self.button_login.setMaximumWidth(200)
-        #self.button_compare.clicked.connect(self.compare_clicked)
+        self.button_login.clicked.connect(self.login_clicked)
         self.button_signup=QPushButton("Sign up")
         self.button_signup.setMaximumWidth(200)
-        #self.button_compare.clicked.connect(self.compare_clicked)
+        self.button_signup.clicked.connect(self.signup_clicked)
         self.top_window_layout=QHBoxLayout()
         self.top_window_layout.addStretch()
         self.top_window_layout.addWidget(self.search_box)
@@ -52,6 +55,12 @@ class qWindow(QWidget):
         self.top_window_layout.addStretch()
         self.top_window.setLayout(self.top_window_layout)
 
+    def login_clicked(self):
+        self.login_window=login_form()
+        self.login_window.show()
+    def signup_clicked(self):
+        self.signup_window=signup()
+        self.signup_window.show()
 
     def details_clicked(self,book_id):
         win=get_show_details_widget()
