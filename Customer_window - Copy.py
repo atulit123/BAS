@@ -1,30 +1,11 @@
 from PyQt4.QtGui import *
 from PyQt4.QtCore import Qt
+import pandas as pd
 import string
+import matplotlib.pyplot as plt
 import sys
 with open('stylesheet.txt','r') as f:
     sheet=f.read()
-
-def qSearchBookResult(book_path,book_title,book_id=None):
-    book_result=QWidget()
-    book_result_layout=QHBoxLayout()
-    book_image=QLabel()
-    book_image.setPixmap(QPixmap(book_path))
-    book_image.setMaximumHeight(80)
-    book_image.setMaximumWidth(800)
-    book_name=QLabel()
-    book_name.setText(book_title)
-    details_button=QPushButton("See Details")
-    book_result_layout.addWidget(book_image)
-    #book_result_layout.addStretch()
-    book_result_layout.addWidget(book_name)
-
-    book_result_layout.addWidget(details_button)
-    book_result_layout.addStretch()
-    book_result.setLayout(book_result_layout)
-    return book_result
-
-
 class qWindow(QWidget):
     def __init__(self, parent=None):
         super(qWindow, self).__init__(parent)
@@ -39,7 +20,7 @@ class qWindow(QWidget):
         #self.top_search.setAutoFillBackground(False)
         self.setStyleSheet(sheet)
         self.compare_list=[]
-        self.wrap_layout.addWidget(self.main_window)
+        # self.wrap_layout.addLayout(self.main_layout)
 
     def topUI(self):
         self.top_window = QWidget()
@@ -74,17 +55,16 @@ class qWindow(QWidget):
         self.main_window = QWidget()
         self.main_window.setMinimumHeight(500)
         self.main_window.setMinimumWidth(1000)
-        self.main_window_layout=QVBoxLayout()
+        self.main_window_layout=QHBoxLayout()
         #self.main_leftUI()
         #self.main_rightUI()
-        book_result=qSearchBookResult("sorce_stone.jpg","Harry Potter")
-        self.main_window_layout.addWidget(book_result)
+
         self.main_window.setLayout(self.main_window_layout)
-        #self.main_window.setStyleSheet("*{background-color:qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #8bf192, stop: 1 #41c34a);}")
+        self.main_window.setStyleSheet("*{background-color:qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #8bf192, stop: 1 #41c34a);}")
 
 
 
-
+   
 
 
 
