@@ -7,6 +7,8 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt4 import QtCore, QtGui
+from PyQt4.QtGui import *
+from PyQt4.QtCore import Qt
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -23,7 +25,7 @@ except AttributeError:
         return QtGui.QApplication.translate(context, text, disambig)
 
 class Book_details(object):
-    def setupUi(self, Form):
+    def setupUi(self, Form,results):
         Form.setObjectName(_fromUtf8("Form"))
         Form.resize(400, 300)
         self.gridLayout = QtGui.QGridLayout(Form)
@@ -65,23 +67,24 @@ class Book_details(object):
         self.verticalLayout_2.addWidget(self.pushButton)
         self.gridLayout.addLayout(self.verticalLayout_2, 0, 0, 1, 1)
 
-        self.retranslateUi(Form)
+        self.retranslateUi(Form,results)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
-    def retranslateUi(self, Form):
+    def retranslateUi(self, Form,results):
         Form.setWindowTitle(_translate("Form", "Form", None))
-        self.label_8.setText(_translate("Form", "TextLabel", None))
-        self.label_2.setText(_translate("Form", "ISBN: 5236", None))
-        self.label.setText(_translate("Form", "Title: Harry Potter", None))
-        self.label_3.setText(_translate("Form", "Genre:Thriller", None))
-        self.label_4.setText(_translate("Form", "Author: JK Rowling", None))
+        self.label_8.setPixmap(QPixmap(results[-1]))
+        self.label_2.setText(_translate("Form", "ISBN:"+str(results[1]), None))
+        self.label.setText(_translate("Form", "Title:"+str(results[2]), None))
+        self.label_3.setText(_translate("Form", "Genre:"+str(results[7]), None))
+        self.label_4.setText(_translate("Form", "Authors:"+str(results[3]), None))
         self.label_5.setText(_translate("Form", "Publication: xyz", None))
-        self.label_7.setText(_translate("Form", "Price: 5000$", None))
-        self.label_6.setText(_translate("Form", "Available:500", None))
+        self.label_7.setText(_translate("Form", "Price:"+str(results[5]), None))
+        self.label_6.setText(_translate("Form", "Available:"+str(results[6]), None))
         self.pushButton.setText(_translate("Form", "Add to cart", None))
     
-def get_show_details_widget():
+def get_show_details_widget(results):
     Form = QtGui.QWidget()
     ui = Book_details()
-    ui.setupUi(Form)
+    ui.setupUi(Form,results)
+    print results
     return Form

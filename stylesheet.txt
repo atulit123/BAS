@@ -11,19 +11,15 @@ QLineEdit {
 
 QPushButton {
 
-	box-shadow: 0px 10px 14px -7px #276873;
 	background:qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #599bb3, stop: 1 #408c99);
 	background-color:#599bb3;
 	border-radius:8px;
-	display:inline-block;
-	cursor:pointer;
 	color:#ffffff;
 	font-family:Arial;
 	font-size:15px;
 	padding:5px 20px;
 	font-weight:bold;
 	text-decoration:none;
-	text-shadow:0px 1px 0px #3d768a;
 }
 
 QPushButton:hover {
@@ -69,5 +65,12 @@ QListView::item:selected:active {
 QListView::item:hover {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                                 stop: 0 #FAFBFE, stop: 1 #DCDEF1);
+
+}
+
+QLabel {
+
+    font-size:20px;
+    color:#0a0505;
 
 }

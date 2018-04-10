@@ -1,11 +1,12 @@
 from PyQt4.QtGui import *
 from PyQt4.QtCore import Qt
+import MySQLdb
 import string
 import matplotlib.pyplot as plt
 from book_details import get_show_details_widget
-from signup import signup
+from signup_widget import SignupWindow
 from login_form import login_form
-
+from login_widget import *
 from stylesheets import *
 import sys
 with open('stylesheet.txt','r') as f:
@@ -22,12 +23,16 @@ class qWindow(QWidget):
         self.wrap_layout.setMargin(0)
         self.topUI()
         self.mainUI()
+
         self.wrap_layout.addWidget(self.top_window)
         self.wrap_layout.addWidget(self.scroll_area)
         self.setLayout(self.wrap_layout)
         #self.top_search.setAutoFillBackground(False)
         self.setStyleSheet(sheet)
         self.compare_list=[]
+        self.login_info=None
+        self.login_window=None
+        #self.topUI_login()
         #self.wrap_layout.addWidget(self.main_window)
 
     def topUI(self):
@@ -37,6 +42,7 @@ class qWindow(QWidget):
         self.search_box=QLineEdit()
         self.search_box.setAlignment(Qt.AlignLeft)
         self.search_box.setFont(QFont("Arial",20))
+        self.search_box.setMinimumWidth(300)
         self.button_search=QPushButton("Search")
         self.button_search.setMaximumWidth(200)
         self.button_search.clicked.connect(self.search_clicked)
@@ -55,42 +61,105 @@ class qWindow(QWidget):
         self.top_window_layout.addStretch()
         self.top_window.setLayout(self.top_window_layout)
 
+    def topUI_login(self):
+        #self.search_box=None
+        #self.button_search=None
+        #self.button_login=None
+        #self.button_signup=None
+        print self.top_window_layout.count()
+        for i in reversed(range(self.top_window_layout.count())):
+            widgetToRemove=self.top_window_layout.itemAt((i))
+            if widgetToRemove:
+                widgetToRemove=widgetToRemove.widget()
+                print widgetToRemove
+                self.top_window_layout.removeWidget(widgetToRemove)
+                if widgetToRemove:
+                    widgetToRemove.setParent(None)
+        self.search_box=QLineEdit()
+        self.search_box.setMinimumWidth(300)
+        self.search_box.setAlignment(Qt.AlignLeft)
+        self.search_box.setFont(QFont("Arial",20))
+        self.button_search=QPushButton("Search")
+        self.button_see_cart=QPushButton("See Cart")
+        self.button_see_cart.clicked.connect(self.see_cart_clicked)
+        self.button_search.setMaximumWidth(200)
+        self.button_see_cart.setMaximumWidth(200)
+        self.button_search.clicked.connect(self.search_clicked)
+        self.top_window_layout.addStretch()
+        self.top_window_layout.addWidget(self.search_box)
+        self.top_window_layout.addWidget(self.button_search)
+        self.top_window_layout.addWidget(self.button_see_cart)
+        self.top_window_layout.addStretch()
+        print self.login_info
+        name=self.login_info[0][1]+" "+self.login_info[0][2]
+        self.top_window_layout.addWidget(QLabel("Welcome "+name))
+
+
+        self.top_window.setLayout(self.top_window_layout)
+
+    def see_cart(self):
+        pass
     def login_clicked(self):
-        self.login_window=login_form()
-        self.login_window.show()
+        #self.login_window=LoginWindow()
+        #self.login_window.show()
+        getLoginWindow(self)
+
     def signup_clicked(self):
-        self.signup_window=signup()
+        self.signup_window=SignupWindow()
         self.signup_window.show()
 
-    def details_clicked(self,book_id):
-        win=get_show_details_widget()
+    def details_clicked(self,book_ind):
+        print book_ind
+        win=get_show_details_widget(self.results[book_ind])
         self.wins=win
         win.show()
 
     def search_clicked(self):
         #self.main_window_layout=QVBoxLayout()
+        self.book_result_wid=[]
         for i in reversed(range(self.main_window_layout.count())):
             widgetToRemove=self.main_window_layout.itemAt((i)).widget()
             self.main_window_layout.removeWidget(widgetToRemove)
-            widgetToRemove.setParent(None)
-        query=str(self.search_box.text())
-        book_result=self.qSearchBookResult("sorce_stone.jpg",query)
-        book_result1=self.qSearchBookResult("sorce_stone.jpg",query)
-        book_result2=self.qSearchBookResult("sorce_stone.jpg",query)
-        book_result3=self.qSearchBookResult("sorce_stone.jpg",query)
-        book_result4=self.qSearchBookResult("sorce_stone.jpg",query)
-        book_result5=self.qSearchBookResult("sorce_stone.jpg",query)
+            if widgetToRemove:
+                widgetToRemove.setParent(None)
+        db = MySQLdb.connect(host="localhost",
+                     user="root",
+                     passwd="atulit",db="bas")
 
-        self.main_window_layout.addWidget(book_result)
-        self.main_window_layout.addWidget(book_result1)
-        self.main_window_layout.addWidget(book_result2)
-        self.main_window_layout.addWidget(book_result3)
-        self.main_window_layout.addWidget(book_result4)
+        cursor = db.cursor()
+
+        search_book="""
+        SELECT * FROM book WHERE UPPER(title) LIKE UPPER ('%%%s%%') or isbn like '%%%s%%'
+
+        or upper(author) like upper('%%%s%%')
+
+        """
+        query=str(self.search_box.text())
+        query="%%".join(query.split())
+        cursor.execute(search_book%(query,query,query))
+
+        self.results=list(cursor.fetchall())
+
+        #commit change
+        print "done"
+        db.commit()
+
+
+        ## Close the connection
+        db.close()
+
+        for i in range(len(self.results)):
+            res=self.results[i]
+            self.book_result_wid.append(self.qSearchBookResult(res[-1],res[2],i))
+
+        for wind_ in self.book_result_wid:
+            self.main_window_layout.addWidget(wind_)
         self.main_window_layout.addStretch()
         self.main_window.setLayout(self.main_window_layout)
 
 
-    def qSearchBookResult(self,book_path,book_title,book_id=None):
+    def qSearchBookResult(self,book_path,book_title,book_ind):
+        print book_ind
         book_result=QWidget()
         book_result.setMaximumHeight(300)
         book_result.setMinimumHeight(300)
@@ -103,7 +172,7 @@ class qWindow(QWidget):
         book_name.setMaximumHeight(30)
         book_name.setText(book_title)
         details_button=QPushButton("See Details")
-        details_button.clicked.connect(self.details_clicked)
+        details_button.clicked.connect(lambda state, x=book_ind:self.details_clicked(x))
         book_result_layout.addWidget(book_image)
         #book_result_layout.addStretch()
         book_result_layout.addWidget(book_name)
