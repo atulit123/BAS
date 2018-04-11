@@ -61,6 +61,7 @@ class SignupWindow(QWidget):
             wid=QLineEdit()
             self.form_layout.addWidget(wid)
             self.edit_box_widget.append(wid)
+        self.edit_box_widget[5].setEchoMode(QLineEdit.Password)
 
         self.form_widget.setLayout(self.form_layout)
 

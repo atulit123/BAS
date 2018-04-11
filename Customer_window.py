@@ -3,11 +3,12 @@ from PyQt4.QtCore import Qt
 import MySQLdb
 import string
 import matplotlib.pyplot as plt
-from book_details import get_show_details_widget
+from book_deatils_widget import get_show_details_widget
 from signup_widget import SignupWindow
 from login_form import login_form
 from login_widget import *
 from stylesheets import *
+from see_cart_widget import *
 import sys
 with open('stylesheet.txt','r') as f:
     sheet=f.read()
@@ -61,6 +62,7 @@ class qWindow(QWidget):
         self.top_window_layout.addStretch()
         self.top_window.setLayout(self.top_window_layout)
 
+
     def topUI_login(self):
         #self.search_box=None
         #self.button_search=None
@@ -97,8 +99,9 @@ class qWindow(QWidget):
 
         self.top_window.setLayout(self.top_window_layout)
 
-    def see_cart(self):
-        pass
+    def see_cart_clicked(self):
+        self.see_cart_widget=get_see_cart_widget(self.login_info)
+        self.see_cart_widget.show()
     def login_clicked(self):
         #self.login_window=LoginWindow()
         #self.login_window.show()
@@ -110,8 +113,8 @@ class qWindow(QWidget):
 
     def details_clicked(self,book_ind):
         print book_ind
-        win=get_show_details_widget(self.results[book_ind])
-        self.wins=win
+        win=get_show_details_widget(self.results[book_ind],self.login_info)
+        self.win_details=win
         win.show()
 
     def search_clicked(self):
