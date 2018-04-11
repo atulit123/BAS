@@ -88,6 +88,14 @@ class SignupWindow(QWidget):
         phone=self.edit_box_widget[4].text()
         password=self.edit_box_widget[5].text()
         address=self.edit_box_widget[6].text()
+        valid_input=True
+        for ed in self.edit_box_widget:
+            if len(ed.text())==0:
+                valid_input=False
+        if not valid_input:
+            self.widget_message=getMessageWindow("Type Valid input")
+            self.widget_message.show()
+            return None
         cursor.execute(search_query,str(self.edit_box_widget[3].text()))
         lst=list(cursor.fetchall())
         if len(lst)==0:

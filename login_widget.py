@@ -68,6 +68,11 @@ class LoginWindow(QWidget):
         user_name=self.edit_box_widget[0].text()
         password=self.edit_box_widget[1].text()
 
+        if len(user_name)==0 or len(password)==0:
+            self.widget_message=getMessageWindow("Type Valid input")
+            self.widget_message.show()
+            return None
+
         search_query="""
             SELECT * FROM customer WHERE user_name=%s
             AND password=%s

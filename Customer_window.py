@@ -119,6 +119,11 @@ class qWindow(QWidget):
 
     def search_clicked(self):
         #self.main_window_layout=QVBoxLayout()
+        query=str(self.search_box.text())
+        if len(query)==0:
+            self.widget_message=getMessageWindow("Type Something")
+            self.widget_message.show()
+            return None
         self.book_result_wid=[]
         for i in reversed(range(self.main_window_layout.count())):
             widgetToRemove=self.main_window_layout.itemAt((i)).widget()
@@ -137,7 +142,7 @@ class qWindow(QWidget):
         or upper(author) like upper('%%%s%%')
 
         """
-        query=str(self.search_box.text())
+
         query="%%".join(query.split())
         cursor.execute(search_book%(query,query,query))
 
