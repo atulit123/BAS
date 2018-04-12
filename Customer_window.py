@@ -22,6 +22,8 @@ class qWindow(QWidget):
         self.wrap_layout = QVBoxLayout()
         self.wrap_layout.setSpacing(0)
         self.wrap_layout.setMargin(0)
+        self.top_window = QWidget()
+        self.top_window_layout=QHBoxLayout()
         self.topUI()
         self.mainUI()
 
@@ -37,7 +39,15 @@ class qWindow(QWidget):
         #self.wrap_layout.addWidget(self.main_window)
 
     def topUI(self):
-        self.top_window = QWidget()
+        print self.top_window_layout.count()
+        for i in reversed(range(self.top_window_layout.count())):
+            widgetToRemove=self.top_window_layout.itemAt((i))
+            if widgetToRemove:
+                widgetToRemove=widgetToRemove.widget()
+                print widgetToRemove
+                self.top_window_layout.removeWidget(widgetToRemove)
+                if widgetToRemove:
+                    widgetToRemove.setParent(None)
         self.top_window.setObjectName("topwindow")
         self.top_window.setMinimumHeight(100)
         self.search_box=QLineEdit()
@@ -53,7 +63,7 @@ class qWindow(QWidget):
         self.button_signup=QPushButton("Sign up")
         self.button_signup.setMaximumWidth(200)
         self.button_signup.clicked.connect(self.signup_clicked)
-        self.top_window_layout=QHBoxLayout()
+
         self.top_window_layout.addStretch()
         self.top_window_layout.addWidget(self.search_box)
         self.top_window_layout.addWidget(self.button_search)
@@ -83,14 +93,17 @@ class qWindow(QWidget):
         self.search_box.setFont(QFont("Arial",20))
         self.button_search=QPushButton("Search")
         self.button_see_cart=QPushButton("See Cart")
+        self.button_logout=QPushButton("Log out")
         self.button_see_cart.clicked.connect(self.see_cart_clicked)
         self.button_search.setMaximumWidth(200)
         self.button_see_cart.setMaximumWidth(200)
         self.button_search.clicked.connect(self.search_clicked)
+        self.button_logout.clicked.connect(self.click_logout)
         self.top_window_layout.addStretch()
         self.top_window_layout.addWidget(self.search_box)
         self.top_window_layout.addWidget(self.button_search)
         self.top_window_layout.addWidget(self.button_see_cart)
+        self.top_window_layout.addWidget(self.button_logout)
         self.top_window_layout.addStretch()
         print self.login_info
         name=self.login_info[0][1]+" "+self.login_info[0][2]
@@ -99,16 +112,22 @@ class qWindow(QWidget):
 
         self.top_window.setLayout(self.top_window_layout)
 
+    def click_logout(self):
+        self.login_info=None
+        self.topUI()
+
+
     def see_cart_clicked(self):
         self.see_cart_widget=get_see_cart_widget(self.login_info)
         self.see_cart_widget.show()
     def login_clicked(self):
         #self.login_window=LoginWindow()
         #self.login_window.show()
-        getLoginWindow(self)
+        getLoginWindow(self,"customer")
 
     def signup_clicked(self):
         self.signup_window=SignupWindow()
+        self.signup_window.table="customer"
         self.signup_window.show()
 
     def details_clicked(self,book_ind):

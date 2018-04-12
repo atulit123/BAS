@@ -14,6 +14,7 @@ class LoginWindow(QWidget):
         self.wrap_layout.setSpacing(0)
         self.wrap_layout.setMargin(0)
         self.parent=None
+        self.table=None
         self.mainUI()
 
         self.wrap_layout.addStretch()
@@ -73,8 +74,8 @@ class LoginWindow(QWidget):
             self.widget_message.show()
             return None
 
-        search_query="""
-            SELECT * FROM customer WHERE user_name=%s
+        search_query="SELECT * FROM "+ self.table+"""
+             customer WHERE user_name=%s
             AND password=%s
         """
         cursor.execute(search_query,(user_name,password))
@@ -90,8 +91,9 @@ class LoginWindow(QWidget):
             self.close()
 
 
-def getLoginWindow(window):
+def getLoginWindow(window,table):
     window.login_window=LoginWindow()
+    window.login_window.table=table
     window.login_window.parent=window
     window.login_window.show()
 

@@ -15,6 +15,7 @@ class SignupWindow(QWidget):
         self.wrap_layout = QHBoxLayout()
         self.wrap_layout.setSpacing(0)
         self.wrap_layout.setMargin(0)
+        self.table=None
         self.mainUI()
 
         self.wrap_layout.addStretch()
@@ -72,14 +73,14 @@ class SignupWindow(QWidget):
 
         cursor = db.cursor()
         ##creating table book
-        insert_customer="""
-        INSERT INTO customer (user_name,first_name,last_name,email,phone,password,address
+        insert_customer="INSERT INTO "+self.table+"""
+         (user_name,first_name,last_name,email,phone,password,address
         )
         VALUES (%s,%s,%s,%s,%s,%s,%s)
         """
 
-        search_query="""
-            SELECT * FROM customer WHERE user_name=%s
+        search_query=" SELECT * FROM "+self.table+"""
+           WHERE user_name=%s
         """
         user_name=self.edit_box_widget[3].text()
         first_name=self.edit_box_widget[0].text()
@@ -96,7 +97,7 @@ class SignupWindow(QWidget):
             self.widget_message=getMessageWindow("Type Valid input")
             self.widget_message.show()
             return None
-        cursor.execute(search_query,str(self.edit_box_widget[3].text()))
+        cursor.execute(search_query,(str(self.edit_box_widget[3].text())))
         lst=list(cursor.fetchall())
         if len(lst)==0:
             print "correct info"
